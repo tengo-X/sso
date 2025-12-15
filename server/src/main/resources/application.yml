@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sso_db?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+
+tengo:
+  sso:
+    token-expire: 30
+    refresh-token-expire: 168
+    algorithm: RS256
+    private-key-path: classpath:keys/private.key
+    public-key-path: classpath:keys/public.key
+
+logging:
+  level:
+    com.tego.sso: DEBUG
+    org.springframework.security: INFO
