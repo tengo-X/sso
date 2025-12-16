@@ -19,7 +19,7 @@ public interface UserAuthenticationService {
      * @param userId 用户ID
      * @return 用户信息
      */
-    UserInfo getUserById(String userId);
+    UserInfo getUserById(Long userId);
 
     /**
      * 根据用户名获取用户信息

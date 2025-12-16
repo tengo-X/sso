@@ -12,6 +12,15 @@ public class AuthenticationResult implements Serializable {
     private String message;
     private UserInfo userInfo;
 
+    public AuthenticationResult() {
+    }
+
+    public AuthenticationResult(boolean success, String message, UserInfo userInfo) {
+        this.success = success;
+        this.message = message;
+        this.userInfo = userInfo;
+    }
+
     public boolean isSuccess() {
         return success;
     }

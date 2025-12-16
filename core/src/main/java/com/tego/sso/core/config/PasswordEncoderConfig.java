@@ -22,7 +22,7 @@ import java.util.Map;
 public class PasswordEncoderConfig {
 
     /**
-     * 方案1: BCryptPasswordEncoder (推荐)
+     * 方案1: BCryptPasswordEncoder
      * 强度: 4-31, 默认10
      */
     @Bean

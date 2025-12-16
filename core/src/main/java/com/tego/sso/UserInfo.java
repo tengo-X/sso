@@ -12,6 +12,7 @@ public class UserInfo implements Serializable {
     private String userId;
     private String username;
     private String email;
+    private String phone;
     private Map<String, Object> attributes;
 
     public String getUserId() {
@@ -28,6 +29,14 @@ public class UserInfo implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
