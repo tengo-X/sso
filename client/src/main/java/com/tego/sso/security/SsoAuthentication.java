@@ -1,8 +1,11 @@
 package com.tego.sso.security;
 
 import com.tego.sso.TokenInfo;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collection;
 import java.util.Collections;
 
 /**
