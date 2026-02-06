@@ -1,4 +1,4 @@
-package com.tego.sso.core;
+package com.tego.sso.core.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.tego.sso.pojo;
+package com.tego.sso.core.pojo;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author dengxiao
  * @date 2025-12-16
  */
-public class UserEntity implements Serializable {
+public class User implements Serializable {
 
     private Long id;
 

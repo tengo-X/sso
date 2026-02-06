@@ -1,4 +1,4 @@
-package com.tego.sso;
+package com.tego.sso.core.pojo;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * @author dengxiao
  * @date 2023-12-12
  */
-public class UserInfo implements Serializable {
+public class AuthUser implements Serializable {
 
     private String userId;
     private String username;

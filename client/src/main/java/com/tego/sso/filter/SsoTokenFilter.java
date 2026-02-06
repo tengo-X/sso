@@ -1,8 +1,8 @@
 package com.tego.sso.filter;
 
-import com.tego.sso.TokenInfo;
-import com.tego.sso.TokenManager;
-import com.tego.sso.security.SsoAuthentication;
+import com.tego.sso.core.pojo.TokenInfo;
+import com.tego.sso.core.xi.TokenManager;
+import com.tego.sso.core.config.SsoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +30,9 @@ public class SsoTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenManager tokenManager;
+
+    @Autowired
+    private SsoProperties ssoProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -77,7 +80,9 @@ public class SsoTokenFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 logger.error("SSO Token验证失败: "+e.getMessage());
             }
+            return;
         }
+        redirectToSsoLogin(request, response);
 
         filterChain.doFilter(request, response);
     }
@@ -89,4 +94,47 @@ public class SsoTokenFilter extends OncePerRequestFilter {
         }
         return request.getParameter("token");
     }
+
+    private void redirectToSsoLogin(HttpServletRequest request,
+                                    HttpServletResponse response) throws IOException {
+
+        // 从配置读取服务器地址
+        String serverUrl = ssoProperties.getServerUrl();
+
+        // 获取当前页面地址（登录后要跳转回来）
+        String currentUrl = request.getRequestURL().toString();
+        if (request.getQueryString() != null) {
+            currentUrl += "?" + request.getQueryString();
+        }
+
+        // 构建SSO登录URL
+        String ssoLoginUrl = String.format(
+                "%s/sso/login?client_id=%s&redirect_uri=%s&response_type=token",
+                serverUrl,
+                ssoProperties.getClientId(),
+                java.net.URLEncoder.encode(currentUrl, "UTF-8")
+        );
+
+        // 重定向
+        response.sendRedirect(ssoLoginUrl);
+    }
+
+    /**
+     * 验证Token（远程调用SSO服务器）
+     */
+    private boolean validateToken(String token) {
+        try {
+            //从配置读取验证地址
+            String serverUrl = ssoProperties.getServerUrl();
+            String verifyUrl = serverUrl + "/sso/verify";
+
+            // 调用SSO服务器验证Token
+            // 这里需要实际调用HTTP接口
+            return true;//callSsoServer(verifyUrl, token);
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

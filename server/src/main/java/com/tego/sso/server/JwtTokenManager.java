@@ -1,8 +1,8 @@
 package com.tego.sso.server;
 
-import com.tego.sso.TokenInfo;
-import com.tego.sso.TokenManager;
-import com.tego.sso.core.SsoProperties;
+import com.tego.sso.core.pojo.TokenInfo;
+import com.tego.sso.core.xi.TokenManager;
+import com.tego.sso.core.config.SsoProperties;
 import com.tego.sso.server.service.KeyPairService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,4 +1,7 @@
-package com.tego.sso;
+package com.tego.sso.core.xi;
+
+import com.tego.sso.core.R;
+import com.tego.sso.core.pojo.AuthUser;
 
 /**
  * @author dengxiao
@@ -12,19 +15,19 @@ public interface UserAuthenticationService {
      * @param password 密码
      * @return 认证结果
      */
-    AuthenticationResult authenticate(String username, String password);
+    R authenticate(String username, String password);
 
     /**
      * 根据用户ID获取用户信息
      * @param userId 用户ID
      * @return 用户信息
      */
-    UserInfo getUserById(Long userId);
+    AuthUser getUserById(Long userId);
 
     /**
      * 根据用户名获取用户信息
      * @param username 用户名
      * @return 用户信息
      */
-    UserInfo getUserByUsername(String username);
+    AuthUser getUserByUsername(String username);
 }

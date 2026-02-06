@@ -1,4 +1,6 @@
-package com.tego.sso;
+package com.tego.sso.core.xi;
+
+import com.tego.sso.core.pojo.TokenInfo;
 
 /**
  * @author dengxiao

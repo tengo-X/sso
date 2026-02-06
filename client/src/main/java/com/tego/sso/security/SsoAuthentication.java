@@ -1,6 +1,6 @@
 package com.tego.sso.security;
 
-import com.tego.sso.TokenInfo;
+import com.tego.sso.core.pojo.TokenInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

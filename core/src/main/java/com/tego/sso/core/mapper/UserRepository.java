@@ -1,6 +1,6 @@
 package com.tego.sso.core.mapper;
 
-import com.tego.sso.pojo.UserEntity;
+import com.tego.sso.core.pojo.User;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Service;
 public class UserRepository {
 
 
-    public UserEntity findByUsername(String username) {
+    public User findByUsername(String username) {
 
-        return new UserEntity();
+        return new User();
     }
 
-    public void save(UserEntity userEntity) {
+    public void save(User user) {
 
     }
 
-    public UserEntity findById(Long userId) {
+    public User findById(Long userId) {
 
-        return new UserEntity();
+        return new User();
     }
 }

@@ -1,4 +1,4 @@
-package com.tego.sso;
+package com.tego.sso.core.pojo;
 
 import java.io.Serializable;
 import java.util.Date;

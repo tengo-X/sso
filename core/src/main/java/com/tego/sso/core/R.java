@@ -1,4 +1,6 @@
-package com.tego.sso;
+package com.tego.sso.core;
+
+import com.tego.sso.core.pojo.AuthUser;
 
 import java.io.Serializable;
 
@@ -6,19 +8,19 @@ import java.io.Serializable;
  * @author dengxiao
  * @date 2023-12-12
  */
-public class AuthenticationResult implements Serializable {
+public class R implements Serializable {
 
     private boolean success;
     private String message;
-    private UserInfo userInfo;
+    private AuthUser authUser;
 
-    public AuthenticationResult() {
+    public R() {
     }
 
-    public AuthenticationResult(boolean success, String message, UserInfo userInfo) {
+    public R(boolean success, String message, AuthUser authUser) {
         this.success = success;
         this.message = message;
-        this.userInfo = userInfo;
+        this.authUser = authUser;
     }
 
     public boolean isSuccess() {
@@ -37,11 +39,11 @@ public class AuthenticationResult implements Serializable {
         this.message = message;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public AuthUser getAuthUser() {
+        return authUser;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setAuthUser(AuthUser authUser) {
+        this.authUser = authUser;
     }
 }

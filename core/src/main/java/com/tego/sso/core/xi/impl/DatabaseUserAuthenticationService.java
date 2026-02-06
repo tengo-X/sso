@@ -1,19 +1,17 @@
-package com.tego.sso.core.impl;
+package com.tego.sso.core.xi.impl;
 
-import com.tego.sso.AuthenticationResult;
-import com.tego.sso.UserAuthenticationService;
-import com.tego.sso.UserInfo;
+import com.tego.sso.core.R;
+import com.tego.sso.core.xi.UserAuthenticationService;
+import com.tego.sso.core.pojo.AuthUser;
 import com.tego.sso.core.mapper.UserRepository;
-import com.tego.sso.pojo.UserEntity;
+import com.tego.sso.core.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author dengxiao
@@ -31,24 +29,24 @@ public class DatabaseUserAuthenticationService implements UserAuthenticationServ
 
     @Override
 //    @Transactional(readOnly = true)
-    public AuthenticationResult authenticate(String username, String password) {
+    public R authenticate(String username, String password) {
         // 1. 查询用户
-        UserEntity userEntity = userRepository.findByUsername(username);
+        User userEntity = userRepository.findByUsername(username);
         if (userEntity == null) {
-            return new AuthenticationResult(false, "用户名不存在", null);
+            return new R(false, "用户名不存在", null);
         }
 
         // 2. 检查账户状态
         if (!userEntity.getEnabled()) {
-            return new AuthenticationResult(false, "账户已被禁用", null);
+            return new R(false, "账户已被禁用", null);
         }
 
         if (userEntity.getLocked()) {
-            return new AuthenticationResult(false, "账户已被锁定", null);
+            return new R(false, "账户已被锁定", null);
         }
 
         if (userEntity.getExpired()) {
-            return new AuthenticationResult(false, "账户已过期", null);
+            return new R(false, "账户已过期", null);
         }
 
         // 3. 验证密码
@@ -63,7 +61,7 @@ public class DatabaseUserAuthenticationService implements UserAuthenticationServ
 //            }
 
             userRepository.save(userEntity);
-            return new AuthenticationResult(false, "密码错误", null);
+            return new R(false, "密码错误", null);
         }
 
         // 4. 重置失败次数
@@ -72,29 +70,29 @@ public class DatabaseUserAuthenticationService implements UserAuthenticationServ
         userRepository.save(userEntity);
 
         // 5. 转换为UserInfo
-        UserInfo userInfo = convertToUserInfo(userEntity);
-        return new AuthenticationResult(true, "登录成功", userInfo);
+        AuthUser userInfo = convertToUserInfo(userEntity);
+        return new R(true, "登录成功", userInfo);
     }
 
     @Override
 //    @Transactional(readOnly = true)
-    public UserInfo getUserById(Long userId) {
-        UserEntity userEntity = userRepository.findById(userId);
+    public AuthUser getUserById(Long userId) {
+        User userEntity = userRepository.findById(userId);
         return userEntity != null ? convertToUserInfo(userEntity) : null;
     }
 
     @Override
 //    @Transactional(readOnly = true)
-    public UserInfo getUserByUsername(String username) {
-        UserEntity userEntity = userRepository.findByUsername(username);
+    public AuthUser getUserByUsername(String username) {
+        User userEntity = userRepository.findByUsername(username);
         return userEntity != null ? convertToUserInfo(userEntity) : null;
     }
 
     /**
      * 将数据库实体转换为UserInfo
      */
-    private UserInfo convertToUserInfo(UserEntity userEntity) {
-        UserInfo userInfo = new UserInfo();
+    private AuthUser convertToUserInfo(User userEntity) {
+        AuthUser userInfo = new AuthUser();
         userInfo.setUserId(userEntity.getId()+"");
         userInfo.setUsername(userEntity.getUsername());
         userInfo.setEmail(userEntity.getEmail());

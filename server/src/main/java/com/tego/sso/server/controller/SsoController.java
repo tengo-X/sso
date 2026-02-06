@@ -1,9 +1,9 @@
 package com.tego.sso.server.controller;
 
-import com.tego.sso.AuthenticationResult;
-import com.tego.sso.TokenInfo;
-import com.tego.sso.UserAuthenticationService;
-import com.tego.sso.UserInfo;
+import com.tego.sso.core.R;
+import com.tego.sso.core.pojo.TokenInfo;
+import com.tego.sso.core.xi.UserAuthenticationService;
+import com.tego.sso.core.pojo.AuthUser;
 import com.tego.sso.server.JwtTokenManager;
 import com.tego.sso.server.service.KeyPairService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +36,11 @@ public class SsoController {
     @PostMapping("/login")
     public Map<String, Object> login(@RequestParam String username,
                                      @RequestParam String password) {
-        AuthenticationResult result = userAuthenticationService.authenticate(username, password);
+        R result = userAuthenticationService.authenticate(username, password);
 
         Map<String, Object> response = new HashMap<>();
         if (result.isSuccess()) {
-            UserInfo userInfo = result.getUserInfo();
+            AuthUser userInfo = result.getAuthUser();
 
             TokenInfo tokenInfo = new TokenInfo();
             tokenInfo.setUserId(userInfo.getUserId());

@@ -1,6 +1,6 @@
 package com.tego.sso.server.autoconfigure;
 
-import com.tego.sso.core.SsoProperties;
+import com.tego.sso.core.config.SsoProperties;
 import com.tego.sso.server.service.KeyPairService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
