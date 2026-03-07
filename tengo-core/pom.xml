@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.tengo.sso</groupId>
-        <artifactId>sso</artifactId>
+        <artifactId>tengo-sso</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tego.sso</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>tengo-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>core</name>
+    <name>sso-core</name>
     <description>core</description>
     <properties>
         <java.version>8</java.version>

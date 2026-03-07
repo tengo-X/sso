@@ -4,35 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.tengo.sso</groupId>
-        <artifactId>sso</artifactId>
+        <artifactId>tengo-sso</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tego.sso</groupId>
-    <artifactId>server</artifactId>
+    <artifactId>tengo-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>server</name>
-    <description>server</description>
+    <name>tengo-client</name>
+    <description>core</description>
     <properties>
         <java.version>8</java.version>
     </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <!-- Spring Boot 配置处理器（用于自动提示） -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.tego.sso</groupId>
-            <artifactId>core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -40,21 +24,13 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.tego.sso</groupId>
+            <artifactId>tengo-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!-- JWT 支持 -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
