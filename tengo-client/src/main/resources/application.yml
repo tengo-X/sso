@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+sso:
+  server-url: http://localhost:8080
+  client-id: web-client
+  public-key-path: classpath:keys/public.key
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080
