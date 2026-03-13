@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /tengo
 
 spring:
   datasource:
@@ -19,8 +21,7 @@ tengo:
     token-expire: 30
     refresh-token-expire: 168
     algorithm: RS256
-    private-key-path: classpath:keys/private.key
-    public-key-path: classpath:keys/public.key
+    x-key: 2269a712a61d4bb4af5b79eccf736c9b
 
 logging:
   level:
