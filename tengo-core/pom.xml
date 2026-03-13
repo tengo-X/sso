@@ -48,7 +48,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <!-- 对于 Java 8，encoding 通常也需要指定 -->
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
