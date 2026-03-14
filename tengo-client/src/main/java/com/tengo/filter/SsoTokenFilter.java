@@ -1,8 +1,9 @@
 package com.tengo.filter;
 
+import com.tengo.core.config.ClientSsoProperties;
 import com.tengo.core.xi.TokenManager;
 import com.tengo.core.pojo.TokenInfo;
-import com.tengo.core.config.SsoProperties;
+import com.tengo.core.config.ServerSsoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
     private TokenManager tokenManager;
 
     @Autowired
-    private SsoProperties ssoProperties;
+    private ClientSsoProperties clientSsoProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -99,7 +100,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response) throws IOException {
 
         // 从配置读取服务器地址
-        String serverUrl = ssoProperties.getServerUrl();
+        String serverUrl = clientSsoProperties.getServerUrl();
 
         // 获取当前页面地址（登录后要跳转回来）
         String currentUrl = request.getRequestURL().toString();
@@ -111,7 +112,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
         String ssoLoginUrl = String.format(
                 "%s/sso/login?client_id=%s&redirect_uri=%s&response_type=token",
                 serverUrl,
-                ssoProperties.getClientId(),
+                clientSsoProperties.getClientId(),
                 java.net.URLEncoder.encode(currentUrl, "UTF-8")
         );
 
@@ -125,7 +126,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
     private boolean validateToken(String token) {
         try {
             //从配置读取验证地址
-            String serverUrl = ssoProperties.getServerUrl();
+            String serverUrl = clientSsoProperties.getServerUrl();
             String verifyUrl = serverUrl + "/sso/verify";
 
             // 调用SSO服务器验证Token

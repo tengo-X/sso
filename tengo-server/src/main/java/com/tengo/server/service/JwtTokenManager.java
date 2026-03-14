@@ -1,6 +1,6 @@
 package com.tengo.server.service;
 
-import com.tengo.core.config.SsoProperties;
+import com.tengo.core.config.ServerSsoProperties;
 import com.tengo.core.exception.TengoSsoException;
 import com.tengo.core.xi.TokenManager;
 import com.tengo.core.pojo.TokenInfo;
@@ -20,7 +20,7 @@ import java.util.Date;
 @Component
 public class JwtTokenManager implements TokenManager {
     @Autowired
-    private SsoProperties ssoProperties;
+    private ServerSsoProperties ssoProperties;
 
     @Override
     public String createToken(TokenInfo tokenInfo) {

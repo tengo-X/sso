@@ -9,7 +9,7 @@ import java.util.UUID;
 public class TengoServerApplication {
 
     public static void main(String[] args) {
-        System.out.println("SSO: "+ UUID.randomUUID().toString().replaceAll("-",""));
+        System.out.println("TENGO.SSO: "+ UUID.randomUUID().toString().replaceAll("-",""));
         SpringApplication.run(TengoServerApplication.class, args);
     }
 

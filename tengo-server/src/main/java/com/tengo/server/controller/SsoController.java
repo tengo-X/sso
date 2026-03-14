@@ -1,6 +1,7 @@
 package com.tengo.server.controller;
 
 import com.tengo.core.R;
+import com.tengo.core.config.UrlConf;
 import com.tengo.core.pojo.User;
 import com.tengo.core.xi.UserAuthenticationService;
 import com.tengo.core.pojo.TokenInfo;
@@ -27,7 +28,7 @@ public class SsoController {
     /**
      * 用户登录
      */
-    @RequestMapping("/login")
+    @RequestMapping(UrlConf.LOGIN)
     public R<String> login(String username, String password) {
         R<User> result = userAuthenticationService.authenticate(username, password);
 
@@ -50,7 +51,7 @@ public class SsoController {
     /**
      * 验证Token
      */
-    @RequestMapping("/verify")
+    @RequestMapping(UrlConf.VERIFY)
     public R<TokenInfo> verifyToken(@RequestParam String token) {
         try {
             TokenInfo tokenInfo = tokenManager.verifyToken(token);
@@ -63,7 +64,7 @@ public class SsoController {
     /**
      * 刷新Token
      */
-    @RequestMapping("/refresh")
+    @RequestMapping(UrlConf.REFRESH)
     public R<String> refreshToken(@RequestParam String token) {
         try {
             String newToken = tokenManager.refreshToken(token);

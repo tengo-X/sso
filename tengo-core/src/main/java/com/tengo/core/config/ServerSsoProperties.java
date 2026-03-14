@@ -1,6 +1,5 @@
 package com.tengo.core.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +11,7 @@ import java.util.UUID;
  */
 @ConfigurationProperties(prefix = "tengo.sso")
 @Configuration
-public class SsoProperties {
+public class ServerSsoProperties {
 
     /**
      * 是否启用SSO
