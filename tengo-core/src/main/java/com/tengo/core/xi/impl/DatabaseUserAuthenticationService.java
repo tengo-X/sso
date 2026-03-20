@@ -55,7 +55,7 @@ public class DatabaseUserAuthenticationService implements UserAuthenticationServ
     }
 
     @Override
-    public AuthUser getUserById(Long userId) {
+    public AuthUser getUserById(java.lang.Long userId) {
         User userEntity = userRepository.findById(userId);
         return userEntity != null ? convertToUserInfo(userEntity) : null;
     }

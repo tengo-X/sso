@@ -19,7 +19,7 @@ public class UserRepository {
         for (int i = 0; i < 10; i++) {
             User u = new User();
             u.setUserId((100+i) + "");
-            u.setId(Long.parseLong((100+i)+""));
+            u.setId(java.lang.Long.parseLong((100+i)+""));
             u.setUsername("user"+i);
             u.setPassword("000000");
             USER_LIST.add(u);
@@ -40,7 +40,7 @@ public class UserRepository {
 
     }
 
-    public User findById(Long userId) {
+    public User findById(java.lang.Long userId) {
 
         return new User();
     }

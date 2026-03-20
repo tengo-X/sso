@@ -35,11 +35,11 @@ public class User implements Serializable {
 
     private Boolean credentialsExpired = false;
 
-    public Long getId() {
+    public java.lang.Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(java.lang.Long id) {
         this.id = id;
     }
 

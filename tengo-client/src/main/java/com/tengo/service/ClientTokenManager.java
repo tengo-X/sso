@@ -1,6 +1,7 @@
 package com.tengo.service;
 
 import com.tengo.core.pojo.TokenInfo;
+import com.tengo.core.pojo.User;
 import com.tengo.core.xi.TokenManager;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientTokenManager implements TokenManager {
     @Override
-    public String createToken(TokenInfo tokenInfo) {
+    public String createToken(String userId) {
         return null;
     }
 

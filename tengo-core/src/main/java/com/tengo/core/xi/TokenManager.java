@@ -1,6 +1,7 @@
 package com.tengo.core.xi;
 
 import com.tengo.core.pojo.TokenInfo;
+import com.tengo.core.pojo.User;
 
 /**
  * @author dengxiao
@@ -10,10 +11,9 @@ public interface TokenManager {
 
     /**
      * 创建Token
-     * @param tokenInfo Token信息
      * @return Token字符串
      */
-    String createToken(TokenInfo tokenInfo);
+    String createToken(String userId);
 
     /**
      * 验证Token

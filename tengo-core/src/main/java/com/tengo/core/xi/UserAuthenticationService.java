@@ -23,7 +23,7 @@ public interface UserAuthenticationService {
      * @param userId 用户ID
      * @return 用户信息
      */
-    AuthUser getUserById(Long userId);
+    AuthUser getUserById(java.lang.Long userId);
 
     /**
      * 根据用户名获取用户信息

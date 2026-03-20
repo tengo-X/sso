@@ -9,8 +9,6 @@ import com.tengo.server.service.JwtTokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-
 /**
  * @author dengxiao
  * @date 2023-12-12
@@ -37,13 +35,8 @@ public class SsoController {
         }
 
         User user = result.getData();
-        TokenInfo tokenInfo = new TokenInfo();
-        tokenInfo.setUserId(user.getUserId());
-        tokenInfo.setUsername(user.getUsername());
-        tokenInfo.setIssuedAt(new Date());
-        tokenInfo.setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)); // 30分钟
 
-        String token = tokenManager.createToken(tokenInfo);
+        String token = tokenManager.createToken(user.getId()+"");
 
         return new R<>(200,token);
     }

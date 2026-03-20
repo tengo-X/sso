@@ -2,6 +2,7 @@ package com.tengo.server.service;
 
 import com.tengo.core.config.ServerSsoProperties;
 import com.tengo.core.exception.TengoSsoException;
+import com.tengo.core.pojo.User;
 import com.tengo.core.xi.TokenManager;
 import com.tengo.core.pojo.TokenInfo;
 import io.jsonwebtoken.Claims;
@@ -23,14 +24,13 @@ public class JwtTokenManager implements TokenManager {
     private ServerSsoProperties ssoProperties;
 
     @Override
-    public String createToken(TokenInfo tokenInfo) {
+    public String createToken(String userId) {
 
         return Jwts.builder()
-                .setSubject(tokenInfo.getUserId())
+                .setSubject(userId)
                 .signWith(SignatureAlgorithm.HS256,ssoProperties.getxKey())
-                .claim("X-ID", tokenInfo.getUserId())
-                .setIssuedAt(tokenInfo.getIssuedAt())
-                .setExpiration(tokenInfo.getExpiration())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + ssoProperties.getTokenExpire()))
                 .compact();
     }
 
@@ -45,13 +45,12 @@ public class JwtTokenManager implements TokenManager {
 
             TokenInfo tokenInfo = new TokenInfo();
             tokenInfo.setUserId(claims.getSubject());
-            tokenInfo.setUsername(claims.get("X-ID", String.class));
             tokenInfo.setIssuedAt(claims.getIssuedAt());
             tokenInfo.setExpiration(claims.getExpiration());
 
             return tokenInfo;
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Token已过期", e);
+            throw new TengoSsoException("Token已过期", e);
         } catch (Exception e) {
             throw new TengoSsoException("Token验证失败", e);
         }
@@ -67,7 +66,7 @@ public class JwtTokenManager implements TokenManager {
         tokenInfo.setExpiration(new Date(now.getTime() +
                 ssoProperties.getTokenExpire() * 60 * 1000L));
 
-        return createToken(tokenInfo);
+        return createToken("10001");
     }
 
     @Override
