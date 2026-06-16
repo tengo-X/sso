@@ -1,9 +1,9 @@
 package com.tengo.filter;
 
 import com.tengo.core.config.ClientSsoProperties;
-import com.tengo.core.xi.TokenManager;
+import com.tengo.core.config.KeyConf;
 import com.tengo.core.pojo.TokenInfo;
-import com.tengo.core.config.ServerSsoProperties;
+import com.tengo.service.ClientTokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class SsoTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    private TokenManager tokenManager;
+    private ClientTokenManager clientTokenManager;
 
     @Autowired
     private ClientSsoProperties clientSsoProperties;
@@ -46,7 +46,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(token)) {
             try {
                 // 验证Token
-                TokenInfo tokenInfo = tokenManager.verifyToken(token);
+                TokenInfo tokenInfo = clientTokenManager.verifyToken(token, KeyConf.AT);
 
                 // 创建认证对象
                 List<GrantedAuthority> authorities = new ArrayList<>();
@@ -118,24 +118,6 @@ public class SsoTokenFilter extends OncePerRequestFilter {
 
         // 重定向
         response.sendRedirect(ssoLoginUrl);
-    }
-
-    /**
-     * 验证Token（远程调用SSO服务器）
-     */
-    private boolean validateToken(String token) {
-        try {
-            //从配置读取验证地址
-            String serverUrl = clientSsoProperties.getServerUrl();
-            String verifyUrl = serverUrl + "/sso/verify";
-
-            // 调用SSO服务器验证Token
-            // 这里需要实际调用HTTP接口
-            return true;//callSsoServer(verifyUrl, token);
-
-        } catch (Exception e) {
-            return false;
-        }
     }
 
 }

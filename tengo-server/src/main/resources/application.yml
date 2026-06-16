@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /tengo
+    context-path: /tengo-sso-server
 
 spring:
   datasource:
@@ -9,19 +9,25 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   redis:
     host: localhost
     port: 6379
     password:
     database: 0
-
+    timeout: 5000
+    lettuce:
+      pool:
+        max-idle: 16
+        min-idle: 8
+        max-active: 32
 tengo:
   sso:
     token-expire: 30
-    refresh-token-expire: 168
+    #refresh_token 默认7天
+    refresh-token-expire: 604800
     algorithm: RS256
     x-key: 2269a712a61d4bb4af5b79eccf736c9b
+    r-key: 2269a712a61d4bb4af5b79eccf736c9b
 
 logging:
   level:

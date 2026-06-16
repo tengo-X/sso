@@ -1,13 +1,12 @@
 package com.tengo.core.xi;
 
 import com.tengo.core.pojo.TokenInfo;
-import com.tengo.core.pojo.User;
 
 /**
  * @author dengxiao
  * @date 2023-12-12
  */
-public interface TokenManager {
+public interface TokenManager extends VerifyTokenManager {
 
     /**
      * 创建Token
@@ -16,11 +15,12 @@ public interface TokenManager {
     String createToken(String userId);
 
     /**
-     * 验证Token
-     * @param token Token字符串
-     * @return Token信息
+     * 创建refreshToken
+     *
+     * @param userId
+     * @return
      */
-    TokenInfo verifyToken(String token);
+    String createRefreshToken(String userId);
 
     /**
      * 刷新Token

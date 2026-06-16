@@ -21,14 +21,16 @@ public class ServerSsoProperties {
     /**
      * Token过期时间(分钟)
      */
-    private int tokenExpire = 30;
+    private long tokenExpire = 30;
 
     /**
      * 刷新Token过期时间(小时)
      */
-    private int refreshTokenExpire = 24 * 7;
+    private long refreshTokenExpire = 24 * 7 * 60 * 60;
 
     private String xKey = UUID.randomUUID().toString().replace("-","");
+
+    private String rKey = UUID.randomUUID().toString().replace("-","");
 
     /**
      * Token签名算法
@@ -38,11 +40,11 @@ public class ServerSsoProperties {
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
-    public int getTokenExpire() { return tokenExpire; }
-    public void setTokenExpire(int tokenExpire) { this.tokenExpire = tokenExpire; }
+    public long getTokenExpire() { return tokenExpire; }
+    public void setTokenExpire(long tokenExpire) { this.tokenExpire = tokenExpire; }
 
-    public int getRefreshTokenExpire() { return refreshTokenExpire; }
-    public void setRefreshTokenExpire(int refreshTokenExpire) { this.refreshTokenExpire = refreshTokenExpire; }
+    public long getRefreshTokenExpire() { return refreshTokenExpire; }
+    public void setRefreshTokenExpire(long refreshTokenExpire) { this.refreshTokenExpire = refreshTokenExpire; }
 
     public String getAlgorithm() { return algorithm; }
     public void setAlgorithm(String algorithm) { this.algorithm = algorithm; }
@@ -53,5 +55,13 @@ public class ServerSsoProperties {
 
     public void setxKey(String xKey) {
         this.xKey = xKey;
+    }
+
+    public String getrKey() {
+        return rKey;
+    }
+
+    public void setrKey(String rKey) {
+        this.rKey = rKey;
     }
 }

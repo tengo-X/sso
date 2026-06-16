@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * @author dx
- * @date 2026/3/14
+ * @date 2023/3/14
  */
 @ConfigurationProperties(prefix = "client.tengo.sso")
 @Configuration

@@ -1,8 +1,7 @@
 package com.tengo.service;
 
 import com.tengo.core.pojo.TokenInfo;
-import com.tengo.core.pojo.User;
-import com.tengo.core.xi.TokenManager;
+import com.tengo.core.xi.VerifyTokenManager;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,24 +9,11 @@ import org.springframework.stereotype.Service;
  * @date 2023/3/14
  */
 @Service
-public class ClientTokenManager implements TokenManager {
+public class ClientTokenManager implements VerifyTokenManager {
+
     @Override
-    public String createToken(String userId) {
+    public TokenInfo verifyToken(String token,String signKey) {
         return null;
     }
 
-    @Override
-    public TokenInfo verifyToken(String token) {
-        return null;
-    }
-
-    @Override
-    public String refreshToken(String token) {
-        return null;
-    }
-
-    @Override
-    public void removeToken(String token) {
-
-    }
 }

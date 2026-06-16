@@ -39,7 +39,7 @@ public class R<T> implements Serializable {
     }
 
     public boolean isSuccess() {
-        return code == 200;
+        return isSuccess = code == 200;
     }
 
     public void setSuccess(boolean success) {

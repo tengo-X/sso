@@ -29,24 +29,6 @@ public class DatabaseUserAuthenticationService implements UserAuthenticationServ
         if (user == null) {
             return new R<>(500, "用户名不存在", null);
         }
-
-        // 2. 检查账户状态
-        if (!user.getEnabled()) {
-            return new R<>(500, "账户已被禁用", null);
-        }
-
-        if (user.getLocked()) {
-            return new R<>(500, "账户已被锁定", null);
-        }
-
-        if (user.getExpired()) {
-            return new R<>(500, "账户已过期", null);
-        }
-
-        // 3. 验证密码
-//        if (!passwordEncoder.matches(password, user.getPassword())) {
-//            return new R<>(500, "密码错误", null);
-//        }
         if (!password.equals(user.getPassword())) {
             return new R<>(500, "密码错误", null);
         }
