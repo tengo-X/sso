@@ -39,10 +39,10 @@
         </dependency>
 
         <!-- JWT 支持 -->
-        <dependency>
+       <!-- <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.tego.sso</groupId>
             <artifactId>tengo-core</artifactId>

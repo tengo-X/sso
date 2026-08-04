@@ -1,24 +1,29 @@
 package com.tengo.server.service;
 
+import com.tengo.core.cache.TokenCache;
 import com.tengo.core.config.KeyConf;
 import com.tengo.core.config.ServerSsoProperties;
-import com.tengo.core.exception.TengoSsoException;
-import com.tengo.core.pojo.User;
+import com.tengo.core.pojo.TengoSsoToken;
 import com.tengo.core.xi.TokenManager;
-import com.tengo.core.pojo.TokenInfo;
-import com.tengo.server.util.JWTUtil;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.crypto.JwtSigner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @author dengxiao
- * @date 2023-12-12
+ * 分布式 JWT Token 管理器，基于 Redis 实现多节点共享黑名单
+ *
+ * 两层 key 设计：
+ * 1. Session 存储: TENGO_SSO_SESSION:{uuid} → TengoSsoToken(userId, username, sessionId)
+ * 2. 用户索引:     TENGO_SSO_USER:{userId}:{sessionId} → TENGO_SSO_SESSION:{uuid}
+ *
+ * 好处：
+ * - key 不再暴露 userId，避免信息泄露
+ * - 支持用户维度的会话管理（查活跃会话、踢人等）
+ * - sessionId 自动由 TengoSsoToken 构造时生成
  */
 @Component
 public class JwtTokenManager implements TokenManager {
@@ -26,80 +31,75 @@ public class JwtTokenManager implements TokenManager {
     @Autowired
     private ServerSsoProperties ssoProperties;
 
+    @Autowired
+    private TokenCache tokenCache;
+
     @Override
-    public String createToken(String userId) {
+    public String createToken(String userId, String username) {
 
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-
-        String xKey = ssoProperties.getxKey();
         long tokenExpire = ssoProperties.getTokenExpire();
-        SignatureAlgorithm algorithm = SignatureAlgorithm.valueOf(ssoProperties.getAlgorithm());
 
-        String accessToken = JWTUtil.genToken(xKey,tokenExpire,algorithm,userId,uuid);
-        return accessToken;
+        // 构建会话对象，sessionId 在构造时自动生成
+        TengoSsoToken ssoToken = new TengoSsoToken(userId, username, tokenExpire);
+
+        // Layer 1: 存储会话数据
+        String sessionKey = KeyConf.PREFIX + userId;
+        tokenCache.put(sessionKey, ssoToken, tokenExpire, TimeUnit.MILLISECONDS);
+
+        return ssoToken.getSessionId();
     }
 
     @Override
-    public String createRefreshToken(String userId) {
+    public TengoSsoToken verifyToken(String token) {
 
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        String userId = ofUserIdByToken(token);
 
-        String rKey = ssoProperties.getrKey();
-        long tokenExpire = ssoProperties.getRefreshTokenExpire();
-        SignatureAlgorithm algorithm = SignatureAlgorithm.valueOf(ssoProperties.getAlgorithm());
+        String sessionKey = KeyConf.PREFIX + userId;
 
-        return JWTUtil.genToken(rKey,tokenExpire,algorithm,userId,uuid);
-    }
-
-    @Override
-    public TokenInfo verifyToken(String token,String signKey) {
-        try {
-
-            Claims claims = Jwts.parser()
-                    .setSigningKey(getSignKey(signKey))
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            TokenInfo tokenInfo = new TokenInfo();
-            tokenInfo.setUserId(claims.getSubject());
-            tokenInfo.setIssuedAt(claims.getIssuedAt());
-            tokenInfo.setExpiration(claims.getExpiration());
-
-            return tokenInfo;
-        } catch (ExpiredJwtException e) {
-            Claims claims = e.getClaims();
-            String jti = claims.getId();
-            String userId = claims.getSubject();
-            //放入黑名单
-
-            throw new TengoSsoException("Token已过期", e);
-        } catch (Exception e) {
-            throw new TengoSsoException("Token验证失败", e);
+        Object ssoTokenObj = tokenCache.get(sessionKey);
+        if (Objects.isNull(ssoTokenObj)) {
+            return null;
         }
-    }
-
-    @Override
-    public String refreshToken(String refreshToken) {
-
-        //解析刷新token
-
-        TokenInfo tokenInfo = verifyToken(refreshToken,KeyConf.RT);
-        if (Objects.isNull(tokenInfo)) {
-            //非法刷新token 将刷新token 加入黑名单
-            throw new TengoSsoException("非法刷新token");
+        TengoSsoToken ssoToken = (TengoSsoToken) ssoTokenObj;
+        if (!token.equals(ssoToken.getSessionId())) {
+            return null;
         }
+        long refreshTokenExpire = ssoProperties.getRefreshTokenExpire();
+        long expired = ssoToken.getExpired();
+        long finalEx = expired + refreshTokenExpire;
 
-        return createToken(tokenInfo.getUserId());
+        tokenCache.expire(sessionKey, finalEx, TimeUnit.MILLISECONDS);
+        return ssoToken;
     }
 
     @Override
     public void removeToken(String token) {
-        // 服务端可以维护一个黑名单，这里简单实现
-        // 生产环境应该使用Redis等存储黑名单
+        if (!StringUtils.hasText(token)) {
+            return;
+        }
+        try {
+
+            String userId = ofUserIdByToken(token);
+
+            // 读取会话对象以获取 sessionId，然后删除用户索引
+            String sessionKey = KeyConf.PREFIX + userId;
+
+            tokenCache.delete(sessionKey);
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
-    private String getSignKey(String signKey) {
+    private static String ofUserIdByToken(String token) {
+        if (Objects.isNull(token) || token.trim().length() <= 0 || !token.contains(KeyConf.SEPARATOR)) {
+            return null;
+        }
 
-        return Objects.equals(KeyConf.AT,signKey) ? ssoProperties.getxKey() : ssoProperties.getrKey();
+        String[] split = token.split(KeyConf.SEPARATOR);
+        if (split.length != 2) {
+            return null;
+        }
+        String userId = split[0];
+        return userId.trim();
     }
 }

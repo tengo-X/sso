@@ -6,10 +6,14 @@ package com.tengo.core.config;
  */
 public interface KeyConf {
 
-    String PREFIX = "SESSION:";
+    /** session 存储 key: TENGO_SSO_SESSION:{userId} */
+    String PREFIX = "TENGO_SSO_SESSION:";
 
-    String RT = "RT";
-    String AT = "AT";
+    /** 用户会话索引 key: TENGO_SSO_USER:{userId}:{sessionId} → tokenKey */
+    String USER_SESSION_INDEX = "TENGO_SSO_USER:";
 
-    String UNDERLINE = "_";
+    String COOKIES = "Cookies";
+    String AUTHORIZATION = "Authorization";
+
+    String SEPARATOR = "@";
 }

@@ -1,13 +1,16 @@
 server:
   port: 8081
 
-sso:
-  server-url: http://localhost:8080/tengo-sso-server
-  client-id: web-client
+spring:
+  application:
+    name: tengo-client
 
-#spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://localhost:8080
+client:
+  tengo:
+    sso:
+      server-url: http://localhost:8080/tengo-sso-server
+
+logging:
+  level:
+    com.tengo: DEBUG
+    org.springframework.security: WARN

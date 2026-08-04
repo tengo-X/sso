@@ -23,11 +23,13 @@ public class R<T> implements Serializable {
         this.code = code;
         this.message = message;
         this.data = data;
+        this.isSuccess = (code == 200);
     }
 
     public R(int code, T data) {
         this.code = code;
         this.data = data;
+        this.isSuccess = (code == 200);
     }
 
     public int getCode() {
@@ -39,7 +41,7 @@ public class R<T> implements Serializable {
     }
 
     public boolean isSuccess() {
-        return isSuccess = code == 200;
+        return isSuccess;
     }
 
     public void setSuccess(boolean success) {

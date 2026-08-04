@@ -1,47 +1,26 @@
 package com.tengo.core.mapper;
 
 import com.tengo.core.pojo.User;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
- * @author dengxiao
- * @date 2025-12-16
+ * 用户数据访问层
  */
-@Service
-public class UserRepository {
+@Mapper
+public interface UserRepository {
 
-    private static final List<User> USER_LIST = new ArrayList<>();
+    @Select("SELECT * FROM sso_user WHERE username = #{username} LIMIT 1")
+    User findByUsername(@Param("username") String username);
 
-    static {
-        for (int i = 0; i < 10; i++) {
-            User u = new User();
-            u.setUserId((100+i) + "");
-            u.setId(java.lang.Long.parseLong((100+i)+""));
-            u.setUsername("user"+i);
-            u.setPassword("000000");
-            USER_LIST.add(u);
-        }
-    }
+    @Select("SELECT * FROM sso_user WHERE id = #{id} LIMIT 1")
+    User findById(@Param("id") Long id);
 
-    public User findByUsername(String username) {
+    @Select("SELECT * FROM sso_user WHERE user_id = #{userId} LIMIT 1")
+    User findByUserId(@Param("userId") String userId);
 
-        for (User user : USER_LIST) {
-            if (username.equals(user.getUsername())) {
-                return user;
-            }
-        }
-        return new User();
-    }
-
-    public void save(User user) {
-
-    }
-
-    public User findById(java.lang.Long userId) {
-
-        return new User();
-    }
+    @Update("UPDATE sso_user SET password = #{password}, updated_at = NOW() WHERE id = #{id}")
+    int updatePassword(@Param("id") Long id, @Param("password") String password);
 }

@@ -3,19 +3,22 @@ package com.tengo.core.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.Serializable;
-
 /**
- * @author dx
- * @date 2023/3/14
+ * 客户端 SSO 配置属性
  */
 @ConfigurationProperties(prefix = "client.tengo.sso")
 @Configuration
-public class ClientSsoProperties implements Serializable {
+public class ClientSsoProperties {
 
+    /**
+     * SSO 认证中心服务地址
+     */
     private String serverUrl;
 
-    private String clientId;
+    /**
+     * SSO 签名密钥（用于本地 JWT 验签，优先级低于环境变量 TENGOSSO_XKEY）
+     */
+    private String signingKey;
 
     public String getServerUrl() {
         return serverUrl;
@@ -25,11 +28,11 @@ public class ClientSsoProperties implements Serializable {
         this.serverUrl = serverUrl;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSigningKey() {
+        return signingKey;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setSigningKey(String signingKey) {
+        this.signingKey = signingKey;
     }
 }

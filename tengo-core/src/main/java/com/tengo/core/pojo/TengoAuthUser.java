@@ -7,12 +7,17 @@ import java.util.Map;
  * @author dengxiao
  * @date 2023-12-12
  */
-public class AuthUser implements Serializable {
+public class TengoAuthUser implements Serializable {
 
     private String userId;
     private String username;
     private String email;
     private String phone;
+    private String realName;
+
+    private String department;
+
+    private String avatar;
     private Map<String, Object> attributes;
 
     public String getUserId() {
@@ -53,5 +58,29 @@ public class AuthUser implements Serializable {
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/sso_db?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/sso_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=utf8
     username: root
-    password: root
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: localhost
@@ -20,16 +20,30 @@ spring:
         max-idle: 16
         min-idle: 8
         max-active: 32
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
 tengo:
   sso:
+    enabled: true
     token-expire: 30
-    #refresh_token 默认7天
     refresh-token-expire: 604800
-    algorithm: RS256
-    x-key: 2269a712a61d4bb4af5b79eccf736c9b
-    r-key: 2269a712a61d4bb4af5b79eccf736c9b
+    algorithm: HS256
+    # ⚠️ 生产环境必须通过环境变量 TENGOSSO_XKEY 和 TENGOSSO_RKEY 注入强密钥（≥32字符）
+    # 以下为开发环境示例值，禁止用于生产
+    x-key: dev-only-do-not-use-in-production-change-me-now-2024
+    r-key: dev-only-do-not-use-in-production-change-me-refresh-2024
+    server-url: http://localhost:8080/tengo-sso-server
+    # CORS 允许的客户端源（逗号分隔），生产环境应精确指定
+    allowed-origins: http://localhost:8081
 
 logging:
   level:
-    com.tego.sso: DEBUG
-    org.springframework.security: INFO
+    com.tengo: DEBUG
+    org.springframework.security: WARN
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

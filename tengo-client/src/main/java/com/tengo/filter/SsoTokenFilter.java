@@ -1,39 +1,31 @@
 package com.tengo.filter;
 
-import com.tengo.core.config.ClientSsoProperties;
+import com.tengo.core.R;
 import com.tengo.core.config.KeyConf;
-import com.tengo.core.pojo.TokenInfo;
+import com.tengo.core.pojo.TengoSsoToken;
 import com.tengo.service.ClientTokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
- * @author dengxiao
- * @date 2023-12-12
+ * SSO Token 过滤器
+ * 通过远程调用 SSO 服务端 /sso/verify 接口完成 token 认证
  */
 @Component
 public class SsoTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private ClientTokenManager clientTokenManager;
-
-    @Autowired
-    private ClientSsoProperties clientSsoProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -44,80 +36,38 @@ public class SsoTokenFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (StringUtils.hasText(token)) {
-            try {
-                // 验证Token
-                TokenInfo tokenInfo = clientTokenManager.verifyToken(token, KeyConf.AT);
-
-                // 创建认证对象
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                if (tokenInfo.getClaims() != null) {
-                    Map<String, Object> claims = tokenInfo.getClaims();
-                    if (claims.containsKey("roles")) {
-                        Object roles = claims.get("roles");
-                        if (roles instanceof List) {
-                            ((List<?>) roles).forEach(role ->
-                                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role))
-                            );
-                        }
-                    }
-                }
-
-                if (authorities.isEmpty()) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                }
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                tokenInfo.getUsername(),
-                                null,
-                                authorities
-                        );
-
-                authentication.setDetails(tokenInfo);
-
-                // 设置到SecurityContext
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            } catch (Exception e) {
-                logger.error("SSO Token验证失败: "+e.getMessage());
+            TengoSsoToken tokenInfo = clientTokenManager.verifyToken(token);
+            if (Objects.isNull(tokenInfo)) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; charset=UTF-8");
+                response.getWriter().println("{\"code\": 401, \"message\": \"请先登录\"}");
+                return;
             }
-            return;
         }
-        redirectToSsoLogin(request, response);
 
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 提取 Token（安全加固：禁用 query param 方式，防止 token 泄露到 URL/日志/Referer）
+     */
     private String extractToken(HttpServletRequest request) {
+        // 优先从 Authorization header 提取
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return request.getParameter("token");
-    }
-
-    private void redirectToSsoLogin(HttpServletRequest request,
-                                    HttpServletResponse response) throws IOException {
-
-        // 从配置读取服务器地址
-        String serverUrl = clientSsoProperties.getServerUrl();
-
-        // 获取当前页面地址（登录后要跳转回来）
-        String currentUrl = request.getRequestURL().toString();
-        if (request.getQueryString() != null) {
-            currentUrl += "?" + request.getQueryString();
+        if (StringUtils.hasText(bearerToken)) {
+            return bearerToken;
         }
 
-        // 构建SSO登录URL
-        String ssoLoginUrl = String.format(
-                "%s/sso/login?client_id=%s&redirect_uri=%s&response_type=token",
-                serverUrl,
-                clientSsoProperties.getClientId(),
-                java.net.URLEncoder.encode(currentUrl, "UTF-8")
-        );
+        // 其次从 Cookie 提取
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (KeyConf.COOKIES.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
 
-        // 重定向
-        response.sendRedirect(ssoLoginUrl);
+        return null;
     }
-
 }

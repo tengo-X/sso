@@ -2,7 +2,7 @@ package com.tengo.core.xi;
 
 import com.tengo.core.pojo.User;
 import com.tengo.core.R;
-import com.tengo.core.pojo.AuthUser;
+import com.tengo.core.pojo.TengoAuthUser;
 
 /**
  * @author dengxiao
@@ -23,12 +23,12 @@ public interface UserAuthenticationService {
      * @param userId 用户ID
      * @return 用户信息
      */
-    AuthUser getUserById(java.lang.Long userId);
+    TengoAuthUser getUserById(java.lang.Long userId);
 
     /**
      * 根据用户名获取用户信息
      * @param username 用户名
      * @return 用户信息
      */
-    AuthUser getUserByUsername(String username);
+    TengoAuthUser getUserByUsername(String username);
 }
