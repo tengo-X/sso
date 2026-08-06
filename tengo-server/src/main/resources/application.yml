@@ -10,7 +10,7 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
     password:
     database: 0
@@ -28,17 +28,8 @@ spring:
 
 tengo:
   sso:
-    enabled: true
-    token-expire: 30
-    refresh-token-expire: 604800
-    algorithm: HS256
-    # ⚠️ 生产环境必须通过环境变量 TENGOSSO_XKEY 和 TENGOSSO_RKEY 注入强密钥（≥32字符）
-    # 以下为开发环境示例值，禁止用于生产
-    x-key: dev-only-do-not-use-in-production-change-me-now-2024
-    r-key: dev-only-do-not-use-in-production-change-me-refresh-2024
-    server-url: http://localhost:8080/tengo-sso-server
-    # CORS 允许的客户端源（逗号分隔），生产环境应精确指定
-    allowed-origins: http://localhost:8081
+    token-expire: 1800
+    refresh-token-expire: 86400
 
 logging:
   level:

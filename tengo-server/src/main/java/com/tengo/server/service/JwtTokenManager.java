@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,10 +64,8 @@ public class JwtTokenManager implements TokenManager {
             return null;
         }
         long refreshTokenExpire = ssoProperties.getRefreshTokenExpire();
-        long expired = ssoToken.getExpired();
-        long finalEx = expired + refreshTokenExpire;
 
-        tokenCache.expire(sessionKey, finalEx, TimeUnit.MILLISECONDS);
+        tokenCache.expire(sessionKey, refreshTokenExpire, TimeUnit.MILLISECONDS);
         return ssoToken;
     }
 

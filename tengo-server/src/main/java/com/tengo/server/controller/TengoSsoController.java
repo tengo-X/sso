@@ -37,7 +37,7 @@ public class TengoSsoController {
     private RateLimiter rateLimiter;
 
     /**
-     * 用户登录 — 返回 access token，通过 Cookie 下发 refresh token
+     * 用户登录 — 返回 access token
      */
     @GetMapping(UrlConf.LOGIN)
     public R<Map<String, Object>> login(String username,String password) {
