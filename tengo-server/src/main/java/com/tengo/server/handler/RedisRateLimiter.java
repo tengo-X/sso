@@ -1,5 +1,6 @@
-package com.tengo.core.rate;
+package com.tengo.server.handler;
 
+import com.tengo.core.rate.RateLimiter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

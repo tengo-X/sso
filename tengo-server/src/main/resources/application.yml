@@ -17,6 +17,7 @@ spring:
     timeout: 5000
     lettuce:
       pool:
+#        enabled: true
         max-idle: 16
         min-idle: 8
         max-active: 32
@@ -35,6 +36,7 @@ logging:
   level:
     com.tengo: DEBUG
     org.springframework.security: WARN
+#    org.springframework.boot.autoconfigure: DEBUG
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

@@ -1,5 +1,6 @@
-package com.tengo.core.cache;
+package com.tengo.server.handler;
 
+import com.tengo.core.cache.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

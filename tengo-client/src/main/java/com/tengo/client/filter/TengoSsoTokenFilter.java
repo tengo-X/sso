@@ -1,11 +1,9 @@
-package com.tengo.filter;
+package com.tengo.client.filter;
 
-import com.tengo.core.R;
+import com.tengo.client.service.TengoClientTokenManager;
 import com.tengo.core.config.KeyConf;
 import com.tengo.core.pojo.TengoSsoToken;
-import com.tengo.service.ClientTokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,11 +19,13 @@ import java.util.Objects;
  * SSO Token 过滤器
  * 通过远程调用 SSO 服务端 /sso/verify 接口完成 token 认证
  */
-@Component
-public class SsoTokenFilter extends OncePerRequestFilter {
+public class TengoSsoTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private ClientTokenManager clientTokenManager;
+    private TengoClientTokenManager tengoClientTokenManager;
+
+    public TengoSsoTokenFilter(TengoClientTokenManager tengoClientTokenManager) {
+        this.tengoClientTokenManager = tengoClientTokenManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -36,7 +36,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (StringUtils.hasText(token)) {
-            TengoSsoToken tokenInfo = clientTokenManager.verifyToken(token);
+            TengoSsoToken tokenInfo = tengoClientTokenManager.verifyToken(token);
             if (Objects.isNull(tokenInfo)) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json; charset=UTF-8");
@@ -53,7 +53,7 @@ public class SsoTokenFilter extends OncePerRequestFilter {
      */
     private String extractToken(HttpServletRequest request) {
         // 优先从 Authorization header 提取
-        String bearerToken = request.getHeader("Authorization");
+        String bearerToken = request.getHeader(KeyConf.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken)) {
             return bearerToken;
         }

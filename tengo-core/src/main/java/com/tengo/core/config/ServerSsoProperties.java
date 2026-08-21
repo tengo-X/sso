@@ -21,44 +21,9 @@ public class ServerSsoProperties {
      */
     private long refreshTokenExpire = 24 * 60 * 60;
 
-    private String xKey;
-
-    private String rKey;
-
-    private String algorithm = "HS256";
-
-    private String serverUrl = "http://localhost:8080/tengo-sso-server";
-
     public long getTokenExpire() { return tokenExpire; }
     public void setTokenExpire(long tokenExpire) { this.tokenExpire = tokenExpire * 1000; }
 
     public long getRefreshTokenExpire() { return refreshTokenExpire; }
     public void setRefreshTokenExpire(long refreshTokenExpire) { this.refreshTokenExpire = refreshTokenExpire * 1000; }
-
-    public String getAlgorithm() { return algorithm; }
-    public void setAlgorithm(String algorithm) { this.algorithm = algorithm; }
-
-    public String getServerUrl() {
-        return serverUrl;
-    }
-
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
-
-    public String getXKey() {
-        return xKey;
-    }
-
-    public void setXKey(String xKey) {
-        this.xKey = xKey;
-    }
-
-    public String getRKey() {
-        return rKey;
-    }
-
-    public void setRKey(String rKey) {
-        this.rKey = rKey;
-    }
 }
